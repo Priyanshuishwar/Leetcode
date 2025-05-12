@@ -5,32 +5,29 @@ class Solution {
         for(int num : nums){
             sum+=num;
         }
-        if(sum %2 != 0){
+        if(sum %2 !=0){
             return false;
         }
-        int target = sum / 2;
-        int dp[][] = new int[n+1][target+1];
-        for(int p[]:dp){
-            Arrays.fill(p,-1);
-        }
-        return helper(nums,target,n,dp);
+        int target = sum /2;
+        return helper(nums,target,n);
     }
-    public static boolean helper(int nums[],int target,int n,int dp[][]){
-        if(n == 0){
-            return false;
+    public static boolean helper(int nums[],int target,int n){
+        boolean dp[][] = new boolean[n+1][target+1];
+
+        for(int i=0;i<=n;i++){
+            dp[i][0] = true;
         }
-        if(target == 0){
-            return true;
+
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=target;j++){
+                if(j <nums[i-1]){
+                    dp[i][j] = dp[i-1][j];
+                }
+                else{
+                    dp[i][j] = dp[i-1][j] || dp[i-1][j-nums[i-1]];
+                }
+            }
         }
-        if(dp[n][target]!= -1){
-            return dp[n][target] == 1;
-        }
-        if(nums[n-1] > target){
-            dp[n][target] = helper(nums,target,n-1,dp) ? 1:0;
-        }
-        else{
-             dp[n][target] = (helper(nums,target,n-1,dp) || helper(nums,target-nums[n-1],n-1,dp))?1:0;
-        }
-        return dp[n][target] ==1;
+        return dp[n][target];
     }
 }
