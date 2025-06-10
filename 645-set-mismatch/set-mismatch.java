@@ -1,29 +1,23 @@
 class Solution {
     public int[] findErrorNums(int[] nums) {
         int n = nums.length;
-        int ans[] = new int[2];
-        HashMap<Integer,Integer> map = new HashMap<>();
-        for(int i = 0;i<n;i++){
-            map.put(nums[i],map.getOrDefault(nums[i],0)+1);
+        int[] ans = new int[2];
 
-            if(map.get(nums[i]) > 1){
-                ans[0] = nums[i];
-                break;
+        for (int i = 0; i < n; i++) {
+            int var = Math.abs(nums[i]);
+            if (nums[var - 1] > 0) {
+                nums[var - 1] *= -1;
+            } else {
+                ans[0] = var; 
             }
         }
-        int sum = 0;
-        int actual_sum = 0;
-        for(int i=1;i<=n;i++){
-            actual_sum += i;
-        }
-        int curr_sum = 0;
-        for(int i=0;i<n;i++){
 
-            curr_sum += nums[i];
+        for (int i = 0; i < n; i++) {
+            if (nums[i] > 0) {
+                ans[1] = i + 1;
+            }
         }
-        curr_sum -= ans[0];
-        sum = actual_sum - curr_sum;
-        ans[1] = sum;
+
         return ans;
     }
 }
