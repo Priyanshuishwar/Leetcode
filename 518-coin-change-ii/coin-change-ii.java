@@ -1,7 +1,7 @@
 class Solution {
     public int change(int amount, int[] coins) {
         int n = coins.length;
-        int dp[][] = new int[n +1][amount +1];
+        int dp[][] = new int[301][5001];
         for(int p[] : dp){
             Arrays.fill(p,-1);
         }
