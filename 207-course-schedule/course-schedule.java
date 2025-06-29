@@ -1,43 +1,43 @@
 class Solution {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-        // int n = prerequisites.length;
+        // First step change - [][] to list
         List<List<Integer>> list = new ArrayList<>();
         for(int i = 0; i < numCourses;i++){
             list.add(new ArrayList<>());
         }
-        for(int nei[] : prerequisites){
-            int u = nei[0];
-            int v = nei[1];
-            list.get(u).add(v);
+        for(int edge[] : prerequisites){
+            int u = edge[0];
+            int v = edge[1];
+            list.get(v).add(u);
         }
-        int indegree[] = new int[numCourses];
-        for(int i = 0; i < numCourses;i++){
-            for(int nei : list.get(i)){
-                indegree[nei]++;
-            }
-        }
-        Queue<Integer> q = new LinkedList<>();
-        for(int i = 0; i < numCourses;i++){
-            if(indegree[i] == 0){
-                q.add(i);
-            }
-        }
-        List<Integer> topo = new ArrayList<>();
-        while(!q.isEmpty()){
-            int node = q.peek();
-            topo.add(node);
-            q.remove();
+        // Stack<Integer> st = new Stack<>();
+        boolean vis[] = new boolean[numCourses];
+        boolean recs[] = new boolean[numCourses];
 
-            for(int ne : list.get(node)){
-                indegree[ne]--;
-                if(indegree[ne] == 0){
-                    q.add(ne);
+        for(int i = 0; i < numCourses;i++){
+            if(vis[i] == false){
+                if(dfs(list,vis,recs,i)){
+                    return false;
                 }
             }
         }
-        if(topo.size() == numCourses){
-            return true;
+        return true;
+    }
+    public static boolean dfs(List<List<Integer>> list,boolean vis[],boolean recs[],int node){
+        vis[node] = true;
+        recs[node] = true;
+        for(int nei : list.get(node)){
+            if(vis[nei] == false){
+                if(dfs(list,vis,recs,nei)){
+                    return true;
+                }
+            }
+            else if(recs[nei]){
+                return true;
+            }
         }
+        recs[node] = false;
+        // st.add(node);
         return false;
     }
 }
