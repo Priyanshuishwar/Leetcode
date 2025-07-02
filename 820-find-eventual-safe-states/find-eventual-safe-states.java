@@ -2,9 +2,6 @@ class Solution {
     public List<Integer> eventualSafeNodes(int[][] graph) {
         int n = graph.length;
         List<List<Integer>> list = new ArrayList<>();
-        // for (int i = 0; i < n; i++) {
-        //     list.add(new ArrayList<>());
-        // }
         for (int i = 0; i < n; i++) {
             List<Integer> temp = new ArrayList<>();
             for (int node : graph[i]) {
@@ -12,39 +9,39 @@ class Solution {
             }
             list.add(temp);
         }
-        int vis[] = new int[n];
-        int recs[] = new int[n];
-        int check[] = new int[n];
+        List<List<Integer>> revlist = new ArrayList<>();
+        for(int i = 0;i < n;i++){
+            revlist.add(new ArrayList<>());
+        }
+        int indegree[] = new int[n];
+        for(int i = 0; i < n; i++){
+            // i -> nei
+            // nei -> i
 
-        for (int i = 0; i < n; i++) {
-            if (vis[i] == 0) {
-                dfs(list, vis, recs, check, i);
+            for(int nei : list.get(i)){
+                revlist.get(nei).add(i);
+                indegree[i]++;
             }
         }
-        List<Integer> res = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            if (check[i] == 1) {
-                res.add(i);
+        Queue<Integer> q = new LinkedList<>();
+        List<Integer> safe = new ArrayList<>();
+        for(int i = 0; i < n;i++){
+            if(indegree[i] == 0){
+                q.offer(i);
             }
         }
-        return res;
-    }
-
-    public static boolean dfs(List<List<Integer>> list, int vis[], int recs[], int check[], int node) {
-        vis[node] = 1;
-        recs[node] = 1;
-        check[node] = 0;
-        for (int nei : list.get(node)) {
-            if (vis[nei] == 0) {
-                if (dfs(list, vis, recs, check, nei) == true) {
-                    return true;
+        while(!q.isEmpty()){
+            int node = q.peek();
+            q.remove();
+            safe.add(node);
+            for(int neighbour : revlist.get(node)){
+                indegree[neighbour]--;
+                if(indegree[neighbour] == 0){
+                    q.add(neighbour);
                 }
-            } else if (recs[nei] == 1) {
-                return true;
             }
         }
-        check[node] = 1;
-        recs[node] = 0;
-        return false;
+        Collections.sort(safe);
+        return safe;
     }
-}
+}    
