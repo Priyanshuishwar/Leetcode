@@ -1,14 +1,8 @@
 class Solution {
-    public class Pair{
-        char ch;
-        int freq;
-        Pair(char ch,int freq){
-            this.ch = ch;
-            this.freq = freq;
-        }
-    }
     public String removeDuplicates(String s, int k) {
+        int n = s.length();
         Stack<Pair> st = new Stack<>();
+
         for(char c : s.toCharArray()){
             if(!st.isEmpty() && st.peek().ch == c){
                 st.peek().freq++;
@@ -27,5 +21,13 @@ class Solution {
             }
         }
         return sb.toString();
+    }
+    public class Pair{
+        char ch;
+        int freq;
+        Pair(char ch,int freq){
+            this.ch = ch;
+            this.freq = freq;
+        }
     }
 }
